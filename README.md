@@ -12,8 +12,8 @@ Expandable testbench platform for websites to measure parameters like:
 
 ## How to use
 Usage: ruby runner.rb [options] <SiteList><br>
->-t, --time [TIME]                Time (sec) to wait for each probe [default:30 min]
->-h, --help                       Show help message
+-t, --time [TIME]                Time (sec) to wait for each probe [default:30 min]<br>
+-h, --help                       Show help message<br>
 
 ## How to demo
 `make demo` will probe for 10 minutes every landing page of the Alexa top 15 list.
