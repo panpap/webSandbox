@@ -51,13 +51,11 @@ doms=Array.new
 print "Reading #{list}..."
 File.foreach(list){|line| doms.push(line.split("\t").first)}
 puts "done!\nStarting with the probes..."
-system("mkdir -p #{dir}")
 thereIsPhidget=false
 puts "Warning: No sensor found. Proceeding without measuring power..." if not `if [ -f tests/power/power ]; then echo "exists" ; fi;`.include? "exists"
 
 #start mining probes
 doms.each{|domain|
-domain="beasiswamext.or.id"
 	puts "Probing "+domain
 	filename=domain.gsub("/","-")
 	headDir=dir+filename
@@ -69,7 +67,7 @@ domain="beasiswamext.or.id"
 
 	#run Tests
 	power(resFile) if thereIsPhidget	    # (1) system power 
-	temperature(filename)   # (2) system temperature
+	temperature(headDir)   # (2) system temperature
 	getHar(resFile,domain) 					# (3) get har
 	sleep(1)
 	cpuMemTest("#{headDir}/memCPU/"+filename) 					# (4) cpu & mem
@@ -80,5 +78,4 @@ domain="beasiswamext.or.id"
 	system('killall power') if thereIsPhidget
 
  	interference(domain,resFile,time)  		# (5) pi digits calculation
-break
 }
