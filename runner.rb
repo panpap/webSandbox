@@ -54,6 +54,8 @@ puts "done!\nStarting with the probes..."
 thereIsPhidget=false
 puts "Warning: No sensor found. Proceeding without measuring power..." if not `if [ -f tests/power/power ]; then echo "exists" ; fi;`.include? "exists"
 
+count=0
+start = Time.now
 #start mining probes
 doms.each{|domain|
 	puts "Probing "+domain
@@ -78,4 +80,7 @@ doms.each{|domain|
 	system('killall power') if thereIsPhidget
 
  	interference(domain,resFile,time)  		# (5) pi digits calculation
+	count+=1
+	puts "Completed #{count}/#{doms.size} in "+(Time.now-start).to_s+"sec" if count%200==0
 }
+puts "Total elapsed time: "+(Time.now-start).to_s+"sec"
