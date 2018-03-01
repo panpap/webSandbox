@@ -1,14 +1,19 @@
 require 'optparse'
 
 def cpuMemTest(resFile)
-	pid=`ps aux | grep "chrome --type=renderer" | awk 'FNR>1 {print $2}'`.split("\n").first
-	puts "\n> Measuring CPU and MEM in pid: #{pid}..."
-	system("psrecord --include-children --interval 1 --plot #{resFile}_memCPU.png --log #{resFile}_memCPU.log #{pid} &")
+	#pid=`ps aux | grep "chrome --type=renderer" | awk 'FNR>1 {print $2}'`.split("\n").first
+	`ps aux | grep "chrome --type=renderer"`.split("\n").each{|line|
+		if line.include? ";" and line.size>150
+			pid=line.split(" ")[1]
+			puts "\n> Measuring CPU and MEM in pid: #{pid}..."
+			system("psrecord --include-children --interval 1 --plot #{resFile}#{pid}_memCPU.png --log #{resFile}#{pid}_memCPU.log #{pid} &")
+		end
+	}
 end
 
 def interference(domain,resFile,t)
 	puts "> Probe (No2) with inteference..."
-	system("google-chrome-stable --incognito --no-sandbox --disable-extensions http://#{domain} > /dev/null 2>&1 &")
+	system("google-chrome --incognito --no-sandbox --disable-extensions http://#{domain} > /dev/null 2>&1 &")
 	system("./tests/interference/y-cruncher-v0.7.5.9480-static/y-cruncher custom pi -dec:1b > #{resFile}_interference.log &")
 	sleep(t)
 	system("kill -9 $(ps aux | grep y-cruncher | grep \"custom pi -dec:1b\" | awk '{print $2}')")
@@ -24,8 +29,9 @@ def power(resFile)
 	system("./tests/power/power > #{resFile}_power.csv &")
 end
 
-def getHar(resFile,domain)
-	system("chrome-har-capturer --host 127.0.0.1 -c -o #{resFile}_requests.har http://#{domain} &")
+def getHar(resFile,domain,time)
+	timeout=1000*time
+	system("chrome-har-capturer --grace #{timeout} --host 127.0.0.1 -c -o #{resFile}_requests.har http://#{domain} &")
 end
 
 #parameters
@@ -58,6 +64,7 @@ count=0
 start = Time.now
 #start mining probes
 doms.each{|dom|
+dom="beasiswamext.or.id"
 	domain=dom.gsub("\n","")
 	puts "Probing "+domain
 	filename=domain.gsub("\n","").gsub("/","-")
@@ -65,15 +72,24 @@ doms.each{|dom|
 	resFile=headDir+"/"+filename
 	system("mkdir -p #{headDir}/memCPU/")
 	puts "> Opening Chrome..."
-	system("google-chrome-stable --incognito --headless --disable-extensions --no-sandbox --remote-debugging-port=9222 > /dev/null 2>&1 &")
+	system("google-chrome --incognito --headless --disable-extensions --no-sandbox --remote-debugging-port=9222 > /dev/null 2>&1 &")
 	sleep(2)
 	#run Tests
 	power(resFile) if thereIsPhidget	    # (1) system power 
 	temperature(headDir)   # (2) system temperature
-	getHar(resFile,domain) 					# (3) get har
-	#sleep(1)
+	getHar(resFile,domain,time) 					# (3) get har
+	sleep(0.5)
 	cpuMemTest("#{headDir}/memCPU/"+filename) 					# (4) cpu & mem
 	sleep(time)
+	print "waiting"
+	tasks=`ps aux | grep chrome-har-capturer | wc -l`.to_i
+	prevTask=tasks
+	while(prevTask==tasks) # wait till close
+		print "."
+		sleep(2)
+		tasks=`ps aux | grep chrome-har-capturer | wc -l`.to_i
+	end
+	puts("\nclosing")
 	system("kill -9 $(pgrep chrome)")
 	system('kill -9 $(ps aux | grep "measureTemp.rb" | awk \'FNR<2 {print $2}\')')
 	system('killall power') if thereIsPhidget
