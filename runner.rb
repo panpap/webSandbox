@@ -74,10 +74,6 @@ doms.each{|domain|
 	temperature(headDir)   # (2) system temperature
 	getHar(resFile,domain) 					# (3) get har
 	#sleep(1)
-puts "opened"
-system("ps aux | grep chrome")
-abort
-
 	cpuMemTest("#{headDir}/memCPU/"+filename) 					# (4) cpu & mem
 
 	sleep(time)
