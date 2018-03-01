@@ -64,7 +64,6 @@ count=0
 start = Time.now
 #start mining probes
 doms.each{|dom|
-dom="beasiswamext.or.id"
 	domain=dom.gsub("\n","")
 	puts "Probing "+domain
 	filename=domain.gsub("\n","").gsub("/","-")
@@ -97,6 +96,5 @@ dom="beasiswamext.or.id"
  	interference(domain,resFile,time)  		# (5) pi digits calculation
 	count+=1
 	puts "Completed #{count}/#{doms.size} in "+(Time.now-start).to_s+"sec" if count%200==0
-break
 }
 puts "Total elapsed time: "+(Time.now-start).to_s+"sec"
