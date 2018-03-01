@@ -1,16 +1,14 @@
 require 'optparse'
 
 def cpuMemTest(resFile)
-	pid=`ps aux | grep "chrome --type=renderer" | awk 'FNR>1 {print 
-$2}'`.split("\n").first
+	pid=`ps aux | grep "chrome --type=renderer" | awk 'FNR>1 {print $2}'`.split("\n").first
 	puts "\n> Measuring CPU and MEM in pid: #{pid}..."
 	system("psrecord --include-children --interval 1 --plot #{resFile}_memCPU.png --log #{resFile}_memCPU.log #{pid} &")
 end
 
 def interference(domain,resFile,t)
 	puts "> Probe (No2) with inteference..."
-	system("google-chrome-stable --incognito --no-sandbox --disable-extensions 
-http://#{domain} > /dev/null 2>&1 &")
+	system("google-chrome-stable --incognito --no-sandbox --disable-extensions http://#{domain} > /dev/null 2>&1 &")
 	system("./tests/interference/y-cruncher-v0.7.5.9480-static/y-cruncher custom pi -dec:1b > #{resFile}_interference.log &")
 	sleep(t)
 	system("kill -9 $(pgrep 11-SNB)")
@@ -27,8 +25,7 @@ def power(resFile)
 end
 
 def getHar(resFile,domain)
-	system("chrome-har-capturer --host 127.0.0.1 -c -o 
-#{resFile}_requests.har http://#{domain} &")
+	system("chrome-har-capturer --host 127.0.0.1 -c -o #{resFile}_requests.har http://#{domain} &")
 end
 
 #parameters
