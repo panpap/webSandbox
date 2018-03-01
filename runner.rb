@@ -66,15 +66,17 @@ doms.each{|domain|
 	resFile=headDir+"/"+filename
 	system("mkdir -p #{headDir}/memCPU/")
 	puts "> Opening Chrome..."
-	system("google-chrome-stable --incognito --headless --disable-extensions 
---no-sandbox --remote-debugging-port=9222 > /dev/null 2>&1 &")
+	system("google-chrome-stable --incognito --headless --disable-extensions --no-sandbox --remote-debugging-port=9222 > /dev/null 2>&1 &")
 	sleep(2)
-
 	#run Tests
 	power(resFile) if thereIsPhidget	    # (1) system power 
 	temperature(headDir)   # (2) system temperature
 	getHar(resFile,domain) 					# (3) get har
-	sleep(1)
+	#sleep(1)
+puts "opened"
+system("ps aux | grep chrome")
+abort
+
 	cpuMemTest("#{headDir}/memCPU/"+filename) 					# (4) cpu & mem
 
 	sleep(time)
