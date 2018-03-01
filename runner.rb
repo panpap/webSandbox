@@ -1,14 +1,16 @@
 require 'optparse'
 
 def cpuMemTest(resFile)
-	pid=`ps aux | grep "chrome --type=renderer" | awk 'FNR>1 {print $2}'`.split("\n").first
+	pid=`ps aux | grep "chrome --type=renderer" | awk 'FNR>1 {print 
+$2}'`.split("\n").first
 	puts "\n> Measuring CPU and MEM in pid: #{pid}..."
 	system("psrecord --include-children --interval 1 --plot #{resFile}_memCPU.png --log #{resFile}_memCPU.log #{pid} &")
 end
 
 def interference(domain,resFile,t)
 	puts "> Probe (No2) with inteference..."
-	system("google-chrome --incognito --disable-extensions http://#{domain} > /dev/null 2>&1 &")
+	system("google-chrome --incognito --no-sandbox --disable-extensions 
+http://#{domain} > /dev/null 2>&1 &")
 	system("./tests/interference/y-cruncher-v0.7.5.9480-static/y-cruncher custom pi -dec:1b > #{resFile}_interference.log &")
 	sleep(t)
 	system("kill -9 $(pgrep 11-SNB)")
@@ -57,12 +59,13 @@ puts "Warning: No sensor found. Proceeding without measuring power..." if not `i
 #start mining probes
 doms.each{|domain|
 	puts "Probing "+domain
-	filename=domain.gsub("/","-")
+	filename=domain.gsub("\n","").gsub("/","-")
 	headDir=dir+filename
 	resFile=headDir+"/"+filename
 	system("mkdir -p #{headDir}/memCPU/")
 	puts "> Opening Chrome..."
-	system("google-chrome --incognito --headless --disable-extensions --remote-debugging-port=9222 > /dev/null 2>&1 &")
+	system("google-chrome --incognito --headless --disable-extensions 
+--no-sandbox --remote-debugging-port=9222 > /dev/null 2>&1 &")
 	sleep(2)
 
 	#run Tests
