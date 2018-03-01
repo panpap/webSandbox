@@ -9,7 +9,7 @@ end
 
 def interference(domain,resFile,t)
 	puts "> Probe (No2) with inteference..."
-	system("google-chrome --incognito --no-sandbox --disable-extensions 
+	system("google-chrome-stable --incognito --no-sandbox --disable-extensions 
 http://#{domain} > /dev/null 2>&1 &")
 	system("./tests/interference/y-cruncher-v0.7.5.9480-static/y-cruncher custom pi -dec:1b > #{resFile}_interference.log &")
 	sleep(t)
@@ -66,7 +66,7 @@ doms.each{|domain|
 	resFile=headDir+"/"+filename
 	system("mkdir -p #{headDir}/memCPU/")
 	puts "> Opening Chrome..."
-	system("google-chrome --incognito --headless --disable-extensions 
+	system("google-chrome-stable --incognito --headless --disable-extensions 
 --no-sandbox --remote-debugging-port=9222 > /dev/null 2>&1 &")
 	sleep(2)
 
