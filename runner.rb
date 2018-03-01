@@ -13,7 +13,7 @@ end
 
 def interference(domain,resFile,t)
 	puts "> Probe (No2) with inteference..."
-	system("google-chrome --incognito --no-sandbox --disable-extensions http://#{domain} > /dev/null 2>&1 &")
+	system("google-chrome-stable --incognito --no-sandbox --disable-extensions http://#{domain} > /dev/null 2>&1 &")
 	system("./tests/interference/y-cruncher-v0.7.5.9480-static/y-cruncher custom pi -dec:1b > #{resFile}_interference.log &")
 	sleep(t)
 	system("kill -9 $(ps aux | grep y-cruncher | grep \"custom pi -dec:1b\" | awk '{print $2}')")
@@ -71,7 +71,7 @@ doms.each{|dom|
 	resFile=headDir+"/"+filename
 	system("mkdir -p #{headDir}/memCPU/")
 	puts "> Opening Chrome..."
-	system("google-chrome --incognito --headless --disable-extensions --no-sandbox --remote-debugging-port=9222 > /dev/null 2>&1 &")
+	system("google-chrome-stable --incognito --headless --disable-extensions --no-sandbox --remote-debugging-port=9222 > /dev/null 2>&1 &")
 	sleep(2)
 	#run Tests
 	power(resFile) if thereIsPhidget	    # (1) system power 
