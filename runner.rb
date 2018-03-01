@@ -27,7 +27,8 @@ def power(resFile)
 end
 
 def getHar(resFile,domain)
-	system("chrome-har-capturer -c -o #{resFile}_requests.har http://#{domain} &")
+	system("chrome-har-capturer --host 127.0.0.1 -c -o 
+#{resFile}_requests.har http://#{domain} &")
 end
 
 #parameters
