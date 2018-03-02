@@ -14,9 +14,10 @@ end
 def interference(domain,resFile,t)
 	puts "> Probe (No2) with inteference..."
 	system("google-chrome-stable --incognito --no-sandbox --disable-extensions http://#{domain} > /dev/null 2>&1 &")
-	system("./tests/interference/y-cruncher-v0.7.5.9480-static/y-cruncher custom pi -dec:500b > #{resFile}_interference.log &")
+	system("./tests/interference/y-cruncher-v0.7.5.9480-static/y-cruncher custom pi -dec:100b > #{resFile}_interference.log &")
 	sleep(t)
-	system("kill -9 $(ps aux | grep y-cruncher | grep \"custom pi -dec:500b\" | awk '{print $2}')")
+	system("kill -9 $(ps aux | grep y-cruncher | grep \"custom pi -dec:100b\" | awk '{print 
+$2}')")
 	system("kill -9 $(pgrep chrome)")
 end
 
