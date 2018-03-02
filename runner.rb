@@ -16,7 +16,7 @@ def interference(domain,resFile,t)
 	system("google-chrome-stable --incognito --no-sandbox --disable-extensions http://#{domain} > /dev/null 2>&1 &")
 	system("./tests/interference/y-cruncher-v0.7.5.9480-static/y-cruncher custom pi -dec:1b > #{resFile}_interference.log &")
 	sleep(t)
-	system("kill -9 $(ps aux | grep y-cruncher | grep \"custom pi -dec:1b\" | awk '{print $2}')")
+	system("kill -9 $(ps aux | grep y-cruncher | grep \"custom pi -dec:100b\" | awk '{print $2}')")
 	system("kill -9 $(pgrep chrome)")
 end
 
@@ -64,6 +64,7 @@ count=0
 start = Time.now
 #start mining probes
 doms.each{|dom|
+dom="qq.com"
 	domain=dom.gsub("\n","")
 	puts "Probing "+domain
 	filename=domain.gsub("\n","").gsub("/","-")
@@ -83,10 +84,12 @@ doms.each{|dom|
 	print "waiting"
 	tasks=`ps aux | grep chrome-har-capturer | wc -l`.to_i
 	prevTask=tasks
-	while(prevTask==tasks) # wait till close
-		print "."
-		sleep(2)
-		tasks=`ps aux | grep chrome-har-capturer | wc -l`.to_i
+	if tasks>2
+		while(prevTask==tasks) # wait till close
+			print "."
+			sleep(2)
+			tasks=`ps aux | grep chrome-har-capturer | wc -l`.to_i
+		end
 	end
 	puts("\nclosing")
 	system("kill -9 $(pgrep chrome)")
@@ -95,6 +98,8 @@ doms.each{|dom|
 
  	interference(domain,resFile,time)  		# (5) pi digits calculation
 	count+=1
+	system("mv *.txt #{headDir}")
 	puts "Completed #{count}/#{doms.size} in "+(Time.now-start).to_s+"sec" if count%200==0
+break
 }
 puts "Total elapsed time: "+(Time.now-start).to_s+"sec"
