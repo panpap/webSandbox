@@ -64,7 +64,6 @@ count=0
 start = Time.now
 #start mining probes
 doms.each{|dom|
-dom="qq.com"
 	domain=dom.gsub("\n","")
 	puts "Probing "+domain
 	filename=domain.gsub("\n","").gsub("/","-")
@@ -85,9 +84,11 @@ dom="qq.com"
 	tasks=`ps aux | grep chrome-har-capturer | wc -l`.to_i
 	prevTask=tasks
 	if tasks>2
-		while(prevTask==tasks) # wait till close
+		count=0
+		while(prevTask==tasks or count>100) # wait till close
 			print "."
 			sleep(2)
+			count+=1
 			tasks=`ps aux | grep chrome-har-capturer | wc -l`.to_i
 		end
 	end
@@ -100,6 +101,5 @@ dom="qq.com"
 	count+=1
 	system("mv *.txt #{headDir}")
 	puts "Completed #{count}/#{doms.size} in "+(Time.now-start).to_s+"sec" if count%200==0
-break
 }
 puts "Total elapsed time: "+(Time.now-start).to_s+"sec"
