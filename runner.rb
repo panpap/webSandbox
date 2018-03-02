@@ -85,11 +85,11 @@ doms.each{|dom|
 	tasks=`ps aux | grep chrome-har-capturer | wc -l`.to_i
 	prevTask=tasks
 	if tasks>2
-		count=0
-		while(prevTask==tasks or count>100) # wait till close
+		c=0
+		while(prevTask==tasks or c>100) # wait till close
 			print "."
 			sleep(2)
-			count+=1
+			c+=1
 			tasks=`ps aux | grep chrome-har-capturer | wc -l`.to_i
 		end
 	end
