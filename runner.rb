@@ -16,8 +16,7 @@ def interference(domain,resFile,t)
 	system("google-chrome-stable --incognito --no-sandbox --disable-extensions http://#{domain} > /dev/null 2>&1 &")
 	system("./tests/interference/y-cruncher-v0.7.5.9480-static/y-cruncher custom pi -dec:10b > #{resFile}_interference.log &")
 	sleep(t)
-	system("kill -9 $(ps aux | grep y-cruncher | grep \"custom pi -dec:10b\" | awk '{print 
-$2}')")
+	system("kill -9 $(ps aux | grep y-cruncher | grep \"custom pi -dec:10b\" | awk '{print $2}')")
 	system("kill -9 $(pgrep chrome)")
 end
 
@@ -101,6 +100,8 @@ doms.each{|dom|
  	interference(domain,resFile,time)  		# (5) pi digits calculation
 	count+=1
 	system("mv *.txt #{headDir}")
+	system("tar -zcf  #{headDir}.tar.gz #{headDir}; rm -rf #{headDir}/")
 	puts "Completed #{count}/#{doms.size} in "+(Time.now-start).to_s+"sec" if count%200==0
+break
 }
 puts "Total elapsed time: "+(Time.now-start).to_s+"sec"
