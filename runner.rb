@@ -102,6 +102,5 @@ doms.each{|dom|
 	system("mv *.txt #{headDir}")
 	system("tar -zcf  #{headDir}.tar.gz #{headDir}; rm -rf #{headDir}/")
 	puts "Completed #{count}/#{doms.size} in "+(Time.now-start).to_s+"sec" if count%200==0
-break
 }
 puts "Total elapsed time: "+(Time.now-start).to_s+"sec"
