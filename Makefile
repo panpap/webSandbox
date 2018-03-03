@@ -10,7 +10,7 @@ install: .unzip .power
 	sudo apt-get install python-dev python-pip python-matplotlib python-tk google-chrome-stable nodejs npm
 	sudo -H pip install --upgrade pip
 	sudo pip install setuptools psutil 
-	sudo pip install psrecord
+	sudo pip install psrecord matplotlib 
 	sudo npm install -g chrome-har-capturer
 
 .unzip:
