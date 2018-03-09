@@ -99,7 +99,7 @@ doms.each{|dom|
 
  	interference(domain,resFile,time)  		# (5) pi digits calculation
 	count+=1
-	system("mv *.txt #{headDir}")
+	system("rm -f *.txt")
 	system("tar -zcf  #{headDir}.tar.gz #{headDir}; rm -rf #{headDir}/")
 	puts "Completed #{count}/#{doms.size} in "+(Time.now-start).to_s+"sec" if count%200==0
 }
