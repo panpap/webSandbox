@@ -85,7 +85,7 @@ doms.each{|dom|
 	prevTask=tasks
 	if tasks>2
 		c=0
-		while(prevTask==tasks or c>50) # wait till close
+		while(prevTask== tasks and c<100) # wait till close
 			puts c
 			sleep(2)
 			c+=1
