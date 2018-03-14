@@ -94,7 +94,7 @@ doms.each{|dom|
 	end
 	puts("\nclosing")
 	system("kill -9 $(pgrep chrome)")
-	system('kill -9 $(ps aux | grep "measureTemp.rb" | awk \'FNR<2 {print $2}\')')
+	system('kill -9 $(ps aux | grep measureTemp.rb | awk \'FNR<2 {print $2}\')')
 	system('killall power') if thereIsPhidget
 
  	interference(domain,resFile,time)  		# (5) pi digits calculation
