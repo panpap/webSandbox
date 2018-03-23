@@ -58,8 +58,11 @@ print "Reading #{list}..."
 File.foreach(list){|line| doms.push(line.split("\t").first)}
 puts "done!\nStarting with the probes..."
 thereIsPhidget=false
-puts "Warning: No sensor found. Proceeding without measuring power..." if not `if [ -f tests/power/power ]; then echo "exists" ; fi;`.include? "exists"
-
+if `if [ -f tests/power/power ]; then echo "exists" ; fi;`.include? "exists"
+	thereIsPhidget=true
+else
+	puts "Warning: No sensor found. Proceeding without measuring power..."
+end
 count=0
 start = Time.now
 #start mining probes
@@ -94,7 +97,11 @@ doms.each{|dom|
 	end
 	puts("\nclosing")
 	system("kill -9 $(pgrep chrome)")
-	system('kill -9 $(ps aux | grep measureTemp.rb | awk \'FNR<2 {print $2}\')')
+	#system('kill -9 $(ps aux | grep measureTemp | awk \'FNR<2 {print $2}\')')
+	`ps aux | grep measureTemp`.split("\n").each{|line|
+		pid=line.split(" ")[1]
+		system('kill -9 '+pid)	
+	}
 	system('killall power') if thereIsPhidget
 
  	interference(domain,resFile,time)  		# (5) pi digits calculation
